@@ -1,0 +1,12 @@
+# Dependencias
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Base de datos SQLite
+ergostudy.db
+
+# Entornos
+.env
+.env.local
