@@ -55,7 +55,7 @@ export default function AppDashboard() {
     load();
   }, [load]);
 
-  const handleSave = async (payload) => {
+  const handleSave = useCallback(async (payload) => {
     try {
       await api.post("/sessions", payload);
       toast.success("Sesión guardada");
@@ -63,7 +63,7 @@ export default function AppDashboard() {
     } catch {
       toast.error("No se pudo guardar la sesión");
     }
-  };
+  }, [load]);
 
   const clearHistory = async () => {
     try {

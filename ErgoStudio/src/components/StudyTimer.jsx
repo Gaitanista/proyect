@@ -83,7 +83,16 @@ export default function StudyTimer({ profile, onSaveSession }) {
         // reached zero
         beep();
         if (phase === "focus") {
-          setPausas((p) => p + 1);
+          onSaveSession({
+            duracion_min: focoMin,
+            foco_min: focoMin,
+            pausa_min: pausaMin,
+            pausas_realizadas: pausas,
+            pre: preRef.current || {},
+            post: {},
+            notas: "",
+          });
+          setTotalFocus(0);
           setPhase("break");
           if (profile?.recordatorio_postura || profile?.recordatorio_movimiento) {
             showReminder({
@@ -94,6 +103,7 @@ export default function StudyTimer({ profile, onSaveSession }) {
           }
           return pausaMin * 60;
         } else {
+          setPausas((p) => p + 1);
           setPhase("focus");
           eyeTickRef.current = 0;
           showReminder({
@@ -106,7 +116,7 @@ export default function StudyTimer({ profile, onSaveSession }) {
       });
     }, 1000);
     return () => clearInterval(id);
-  }, [running, phase, focoMin, pausaMin, profile, showReminder]);
+  }, [running, phase, focoMin, pausaMin, profile, pausas, onSaveSession, showReminder]);
 
   const handleStart = () => setPreOpen(true);
 
@@ -129,6 +139,11 @@ export default function StudyTimer({ profile, onSaveSession }) {
 
   const handleFinish = () => {
     setRunning(false);
+    if (totalFocus === 0) {
+      setPhase("idle");
+      setSecondsLeft(focoMin * 60);
+      return;
+    }
     setPostOpen(true);
   };
 
